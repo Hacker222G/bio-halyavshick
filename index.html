@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сайт Hackera222!</title>
+    <style>
+        body {
+            font-family: "Segoe UI", sans-serif;
+            background-image: url('bg.png'); 
+            background-color: #1E90FF; 
+            background-repeat: no-repeat; 
+            background-size: cover;      
+            background-position: center center; 
+            background-attachment: fixed; 
+            color: #000000;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; 
+            min-height: 100vh;
+            gap: 20px;
+        }
+
+        .xp-window {
+            width: 600px; 
+            background-color: rgba(255, 255, 255, 0.7); 
+            border: 1px solid rgba(122, 122, 122, 0.8); 
+            box-shadow: 0 0 20px rgba(0,0,0,0.4), inset 0 0 2px rgba(255,255,255,0.8); 
+            border-radius: 8px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+
+        .side-window {
+            width: 200px;
+            height: 350px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(122, 122, 122, 0.8);
+            box-shadow: 0 0 20px rgba(0,0,0,0.4), inset 0 0 2px rgba(255,255,255,0.8);
+            border-radius: 8px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+
+        .xp-title-bar {
+            background: linear-gradient(to bottom, rgba(172, 220, 255, 0.7), rgba(145, 201, 247, 0.7), rgba(113, 181, 240, 0.7)); 
+            color: #000000;
+            padding: 5px 10px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 25px; 
+            border-bottom: 1px solid rgba(122, 122, 122, 0.8);
+            user-select: none; 
+            cursor: move;
+        }
+
+        .xp-title-bar-text {
+            padding-left: 3px;
+            text-shadow: 0px 1px 0px rgba(255,255,255,0.5);
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 4px;
+        }
+
+        .window-button {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+            border: 1px solid rgba(177, 177, 177, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            font-size: 10px;
+            color: #555;
+            box-shadow: 0 0 3px rgba(255,255,255,0.5);
+        }
+
+        .minimize-button:hover {
+            background: rgba(255, 255, 225, 0.7);
+        }
+
+        .maximize-button:hover {
+            background: rgba(225, 255, 225, 0.7);
+        }
+
+        .close-button:hover {
+            background: rgba(255, 225, 225, 0.7);
+            color: #A00;
+        }
+
+        .xp-tabs-container {
+            background: linear-gradient(to bottom, rgba(242, 242, 242, 0.8), rgba(229, 229, 229, 0.8));
+            padding: 5px 5px 0 5px;
+        }
+
+        .xp-tabs {
+            display: flex;
+        }
+
+        .xp-tab {
+            background: linear-gradient(to bottom, rgba(249, 249, 249, 0.8), rgba(227, 227, 227, 0.8));
+            border: 1px solid rgba(177, 177, 177, 0.8);
+            border-bottom: none;
+            padding: 6px 12px;
+            margin-right: 3px;
+            margin-bottom: -1px; 
+            cursor: pointer;
+            font-size: 12px;
+            border-radius: 3px 3px 0 0;
+            position: relative;
+            z-index: 1;
+            user-select: none;
+            color: #555555;
+        }
+
+        .xp-tab.active {
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.9), rgba(245, 245, 245, 0.9)); 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.9); 
+            font-weight: bold;
+            z-index: 2;
+            color: #000000;
+        }
+
+        .xp-content-area {
+            background-color: rgba(255, 255, 255, 0.8); 
+            padding: 15px;
+            border-top: none;
+            min-height: 250px; 
+            font-size: 12px;
+        }
+
+        .xp-content-pane {
+            display: none;
+        }
+
+        .xp-content-pane.active {
+            display: block;
+        }
+
+        .xp-content-pane h3 {
+            color: #1E90FF;
+            margin-top: 0;
+            border-bottom: 1px solid rgba(229, 229, 229, 0.8);
+            padding-bottom: 5px;
+        }
+        
+        .xp-content-pane ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .xp-content-pane li {
+            margin-bottom: 8px;
+        }
+        .xp-content-pane strong {
+            display: inline-block;
+            min-width: 100px; 
+            font-weight: normal; 
+            color: #555;
+        }
+
+        .avatar {
+            width: 100px;  
+            height: 100px; 
+            border: 1px solid rgba(177, 177, 177, 0.8);
+            float: right;
+            margin-left: 15px;
+            margin-bottom: 15px;
+            background-color: black; 
+            object-fit: cover; 
+            color: transparent; 
+            border-radius: 3px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        img[src=""] { 
+             visibility: hidden;
+        }
+        img:not([src]), img[src=""] {
+             border: 1px solid #ccc; 
+        }
+
+        .copy-button {
+            font-size: 11px;
+            padding: 2px 8px;
+            margin-left: 8px;
+            cursor: pointer;
+            border: 1px solid rgba(177, 177, 177, 0.8);
+            background: linear-gradient(to bottom, rgba(249, 249, 249, 0.8), rgba(227, 227, 227, 0.8));
+            border-radius: 3px;
+            color: #555555;
+            box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+        }
+        .copy-button:active {
+            background: linear-gradient(to bottom, rgba(227, 227, 227, 0.8), rgba(249, 249, 249, 0.8));
+            box-shadow: inset 0 1px 1px rgba(0,0,0,0.1);
+        }
+         .status-bar {
+            background: linear-gradient(to bottom, rgba(242, 242, 242, 0.7), rgba(229, 229, 229, 0.7));
+            padding: 4px 8px;
+            font-size: 11px;
+            border-top: 1px solid rgba(177, 177, 177, 0.8);
+            text-align: left;
+            height: 18px;
+            line-height: 18px;
+            color: #555555;
+            border-radius: 0 0 8px 8px;
+        }
+
+        .side-content {
+            padding: 10px;
+            font-size: 11px;
+        }
+
+        .side-content h4 {
+            color: #1E90FF;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid rgba(229, 229, 229, 0.8);
+            padding-bottom: 5px;
+        }
+
+        .side-content ul {
+            list-style-type: none;
+            padding-left: 5px;
+        }
+
+        .side-content li {
+            margin-bottom: 5px;
+            padding-left: 18px;
+            position: relative;
+        }
+
+        .side-content li::before {
+            content: "»";
+            position: absolute;
+            left: 0;
+            color: #1E90FF;
+        }
+
+        a {
+            color: #1E90FF;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Стиль для активного окна (на переднем плане) */
+        .active-window {
+            z-index: 10;
+        }
+
+    </style>
+</head>
+<body>
+<div class="side-window" id="nav-window">
+    <div class="xp-title-bar">
+        <span class="xp-title-bar-text">Навигация</span>
+        <div class="window-controls">
+            <div class="window-button minimize-button" title="Свернуть">_</div>
+            <div class="window-button maximize-button" title="Развернуть">□</div>
+            <div class="window-button close-button" title="Закрыть">×</div>
+        </div>
+    </div>
+    <div class="side-content">
+        <h4>Быстрые ссылки</h4>
+        <ul>
+            <li>Главная</li>
+            <li>Проекты</li>
+            <li>Игры</li>
+            <li>Девайсы</li>
+        </ul>
+        <h4>Избранное</h4>
+        <ul>
+            <li>Minecraft</li>
+            <li>Deepseek</li>
+            <li>ARCH LINUX</li>
+            <li>TikTok</li>
+            <li>Windows</li>
+        </ul>
+    </div>
+</div>
+
+<div class="xp-window" id="main-window">
+    <div class="xp-title-bar">
+        <span class="xp-title-bar-text">Халявщика Домик™ (Ultimate)</span>
+        <div class="window-controls">
+            <div class="window-button minimize-button" title="Свернуть">_</div>
+            <div class="window-button maximize-button" title="Развернуть">□</div>
+            <div class="window-button close-button" title="Закрыть">×</div>
+        </div>
+    </div>
+    <div class="xp-tabs-container">
+        <div class="xp-tabs">
+            <div class="xp-tab active" onclick="openTab(event, 'about')">Кто такой Hacker222?</div>
+            <div class="xp-tab" onclick="openTab(event, 'authenticity')">Связь с космосом</div>
+            <div class="xp-tab" onclick="openTab(event, 'computer')">Моя Пекарня</div>
+        </div>
+    </div>
+
+    <div class="xp-content-area">
+        <div id="about" class="xp-content-pane active">
+            <h3>Про меня, любимого</h3>
+            <img src="avatar.png" alt="[Черный квадрат Малевича, если разраб не подсуетился с авой]" class="avatar">
+            <p><strong>Зовут:</strong> Богдан</p>
+            <p><strong>Ник:</strong> Халявщик</p>
+            <p><strong>Лет:</strong> 12</p>
+        </div>
+
+        <div id="authenticity" class="xp-content-pane">
+            <h3>Контакты для связи (если осмелишься)</h3>
+            <ul>
+                <li><strong>YouTube:</strong> <a href="https://www.youtube.com/@halyavshick" target="_blank">Видосы стабильно раз в 5 лет</a></li>
+                <li><strong>YouTube:</strong> <a href="https://www.youtube.com/@shedeverhalyavshick" target="_blank">Второй ютуб куда я выкладываю все подрят</a></li>
+                <li><strong>TikTok:</strong> <a href="https://www.tiktok.com/@halyavshick222" target="_blank">Просто какието видео</a></li>
+                <li><strong>4pda:</strong> <a href="https://4pda.to/forum/index.php?showuser=12131047" target="_blank">Шобы был</a></li>
+                <li><strong>OpenVK:</strong> <a href="https://ovk.to/id21656" target="_blank">Тут я иногда сижу имба копия вк</a></li>
+                <li>
+                    <strong>Telegram:</strong> <span id="telegram-id">TwinkHacker</span>
+                    <button class="copy-button" onclick="copyToClipboard('telegram-id', this)">Стырить ник</button>
+                </li>
+                <li>
+                    <strong>Discord:</strong> <span id="discord-id">yutuberhalyavschik</span>
+                    <button class="copy-button" onclick="copyToClipboard('discord-id', this)">Свистнуть и бежать</button>
+                </li>
+            </ul>
+        </div>
+
+        <div id="computer" class="xp-content-pane">
+            <h3>Моя Игровая Станция</h3>
+            <ul>
+                <li><strong>CPU:</strong> Intel Core i5 12400f</li>
+                <li><strong>GPU:</strong> RTX 4060 Ti VENTUS 2X BLACK (8 гигов озу)</li>
+                <li><strong>RAM:</strong> 16GB G.Skill Trident Z RGB (2 плашки по 16 гигов)</li>
+                <li><strong>Disk:</strong>ADATA SX8200PNP</li>
+            </ul>
+        </div>
+    </div>
+     <div class="status-bar">
+        <span style="border: 1px solid rgba(177, 177, 177, 0.8); background: rgba(255, 255, 255, 0.5); padding: 0 8px; border-radius: 2px;">Мой компьютер</span>
+        <span style="float:right; border: 1px solid rgba(177, 177, 177, 0.8); background: rgba(255, 255, 255, 0.5); padding: 0 5px; border-radius: 2px;">RU</span>
+    </div>
+</div>
+
+<div class="side-window" id="info-window">
+    <div class="xp-title-bar">
+        <span class="xp-title-bar-text">Инфо</span>
+        <div class="window-controls">
+            <div class="window-button minimize-button" title="Свернуть">_</div>
+            <div class="window-button maximize-button" title="Развернуть">□</div>
+            <div class="window-button close-button" title="Закрыть">×</div>
+        </div>
+    </div>
+    <div class="side-content">
+        <h4>Привет добро пожаловать на мой сайт</h4>
+        <p>Я просто чел который ничего не умеет и кодит на нейронке</p>
+        <h4>Статистика</h4>
+        <ul>
+            <li>Посещений: 42</li>
+    </div>
+</div>
+
+<script>
+    function openTab(evt, tabName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("xp-content-pane");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+            tabcontent[i].classList.remove("active");
+        }
+        tablinks = document.getElementsByClassName("xp-tab");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].classList.remove("active");
+        }
+        document.getElementById(tabName).style.display = "block";
+        document.getElementById(tabName).classList.add("active");
+        evt.currentTarget.classList.add("active");
+        document.querySelector('.status-bar span:first-child').textContent = evt.currentTarget.textContent;
+    }
+
+    function copyToClipboard(elementId, button) {
+        const textToCopy = document.getElementById(elementId).innerText;
+        navigator.clipboard.writeText(textToCopy).then(function() {
+            const originalText = button.innerText;
+            button.innerText = 'Украдено!';
+            button.style.background = 'linear-gradient(to bottom, rgba(227, 255, 227, 0.8), rgba(193, 255, 193, 0.8))';
+            button.style.borderColor = 'rgba(127, 191, 127, 0.8)';
+            setTimeout(function() {
+                button.innerText = originalText;
+                button.style.background = 'linear-gradient(to bottom, rgba(249, 249, 249, 0.8), rgba(227, 227, 227, 0.8))';
+                button.style.borderColor = 'rgba(177, 177, 177, 0.8)';
+            }, 1500);
+        }, function(err) {
+            console.error('Алярм! Копирование накрылось: ', err);
+            alert('Хьюстон, у нас проблемы с копированием! Попробуй ручками, ха-х   а.');
+        });
+    }
+
+    // Добавляем функциональность кнопкам окон и перетаскивание
+    document.addEventListener("DOMContentLoaded", function() {
+       var firstTab = document.querySelector('.xp-tab.active');
+       if (firstTab) firstTab.click();
+       
+       // Обработчики для кнопок окон
+       const closeButtons = document.querySelectorAll('.close-button');
+       const minimizeButtons = document.querySelectorAll('.minimize-button');
+       const maximizeButtons = document.querySelectorAll('.maximize-button');
+       
+       closeButtons.forEach(button => {
+           button.addEventListener('click', function() {
+               const window = this.closest('.xp-window, .side-window');
+               window.style.display = 'none';
+           });
+       });
+       
+       minimizeButtons.forEach(button => {
+           button.addEventListener('click', function() {
+               const window = this.closest('.xp-window, .side-window');
+               window.style.opacity = '0.5';
+               setTimeout(() => {
+                   window.style.opacity = '1';
+               }, 1000);
+           });
+       });
+       
+       maximizeButtons.forEach(button => {
+           button.addEventListener('click', function() {
+               const window = this.closest('.xp-window, .side-window');
+               if (window.dataset.maximized) {
+                   window.style.width = window.dataset.originalWidth;
+                   window.style.height = window.dataset.originalHeight;
+                   window.style.position = window.dataset.originalPosition;
+                   window.style.top = window.dataset.originalTop;
+                   window.style.left = window.dataset.originalLeft;
+                   delete window.dataset.maximized;
+               } else {
+                   window.dataset.originalWidth = window.style.width || getComputedStyle(window).width;
+                   window.dataset.originalHeight = window.style.height || getComputedStyle(window).height;
+                   window.dataset.originalPosition = window.style.position || getComputedStyle(window).position;
+                   window.dataset.originalTop = window.style.top || getComputedStyle(window).top;
+                   window.dataset.originalLeft = window.style.left || getComputedStyle(window).left;
+                   
+                   window.style.width = (window.classList.contains('xp-window') ? '80%' : '300px');
+                   window.style.height = 'auto';
+                   window.style.position = 'fixed';
+                   window.style.top = '50%';
+                   window.style.left = '50%';
+                   window.style.transform = 'translate(-50%, -50%)';
+                   window.dataset.maximized = 'true';
+               }
+           });
+       });
+
+       // Функция для перетаскивания окон
+       function makeWindowDraggable(windowElement) {
+           const titleBar = windowElement.querySelector('.xp-title-bar');
+           let offsetX, offsetY, isDragging = false;
+
+           // Активация окна при клике
+           windowElement.addEventListener('mousedown', function() {
+               // Убрать класс active-window у всех окон
+               document.querySelectorAll('.xp-window, .side-window').forEach(win => {
+                   win.classList.remove('active-window');
+                   win.style.zIndex = '1';
+               });
+               // Добавить класс active-window текущему окну
+               windowElement.classList.add('active-window');
+               windowElement.style.zIndex = '10';
+           });
+
+           titleBar.addEventListener('mousedown', function(e) {
+               // Игнорировать клики на кнопках управления окном
+               if (e.target.classList.contains('window-button')) return;
+               
+               isDragging = true;
+               
+               // Если окно развернуто, не позволяем его перетаскивать
+               if (windowElement.dataset.maximized) return;
+               
+               // Получаем текущую позицию окна
+               const rect = windowElement.getBoundingClientRect();
+               
+               // Если окно еще не имеет абсолютной позиции, устанавливаем ее
+               if (getComputedStyle(windowElement).position !== 'absolute') {
+                   windowElement.style.position = 'absolute';
+                   windowElement.style.top = rect.top + 'px';
+                   windowElement.style.left = rect.left + 'px';
+               }
+               
+               // Вычисляем смещение от позиции курсора до верхнего левого угла окна
+               offsetX = e.clientX - rect.left;
+               offsetY = e.clientY - rect.top;
+               
+               // Добавляем стили для перетаскивания
+               windowElement.style.cursor = 'grabbing';
+               titleBar.style.cursor = 'grabbing';
+           });
+
+           document.addEventListener('mousemove', function(e) {
+               if (!isDragging) return;
+               if (windowElement.dataset.maximized) return;
+               
+               // Вычисляем новые координаты
+               const newX = e.clientX - offsetX;
+               const newY = e.clientY - offsetY;
+               
+               // Устанавливаем новую позицию окна
+               windowElement.style.left = newX + 'px';
+               windowElement.style.top = newY + 'px';
+           });
+
+           document.addEventListener('mouseup', function() {
+               if (isDragging) {
+                   isDragging = false;
+                   windowElement.style.cursor = '';
+                   titleBar.style.cursor = 'move';
+               }
+           });
+       }
+
+       // Делаем все окна перетаскиваемыми
+       const allWindows = document.querySelectorAll('.xp-window, .side-window');
+       allWindows.forEach(makeWindowDraggable);
+       
+       // Устанавливаем начальные позиции для окон
+       const mainWindow = document.getElementById('main-window');
+       const navWindow = document.getElementById('nav-window');
+       const infoWindow = document.getElementById('info-window');
+       
+       // Центрируем главное окно
+       mainWindow.style.position = 'absolute';
+       mainWindow.style.left = '50%';
+       mainWindow.style.top = '50%';
+       mainWindow.style.transform = 'translate(-50%, -50%)';
+       
+       // Позиционируем боковые окна
+       navWindow.style.position = 'absolute';
+       navWindow.style.left = '20px';
+       navWindow.style.top = '100px';
+       
+       infoWindow.style.position = 'absolute';
+       infoWindow.style.right = '20px';
+       infoWindow.style.top = '100px';
+       
+       // Активируем главное окно по умолчанию
+       mainWindow.classList.add('active-window');
+       mainWindow.style.zIndex = '10';
+    });
+</script>
+
+</body>
+</html>
